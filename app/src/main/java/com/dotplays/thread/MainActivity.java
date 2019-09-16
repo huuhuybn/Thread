@@ -24,45 +24,20 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setMax(9999999);
 
 
-
     }
-
 
     public void openThread(View view) {
 
-        MyThread myThread = new MyThread();
+        OnCountFinished onCountFinished = new OnCountFinished() {
+            @Override
+            public void onFinished(String kq) {
+                tvKQ.setText(kq);
+            }
+        };
+        MyThread myThread = new MyThread(progressBar,onCountFinished);
         myThread.execute(0, 9999999);
 
 
     }
 
-    class MyThread extends AsyncTask<Integer, Long, String> {
-
-        @Override
-        protected void onProgressUpdate(Long... values) {
-            super.onProgressUpdate(values);
-            progressBar.setProgress(values[0].intValue());
-        }
-
-        // phuong thuc xy ly du lieu trong thread
-        @Override
-        protected String doInBackground(Integer... integers) {
-            int a = integers[0];
-            int b = integers[1];
-
-            for (int i = 0; i < b; i++) {
-                publishProgress(Long.valueOf(a));
-                a++;
-            }
-            return "Da Dem Xong tu " + a + " Den " + b;
-        }
-
-        // sau khi ket thuc thread va cap nhat du lieu len Main UI
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            tvKQ.setText(s);
-        }
-
-    }
 }
